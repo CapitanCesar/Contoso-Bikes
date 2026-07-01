@@ -128,6 +128,14 @@ table fact_Ventas
 
 		annotation SummarizationSetBy = Automatic
 
+	column MComercial = fact_Ventas[TNeto] - fact_Ventas[TCoste]
+		lineageTag: 44c4965e-9862-4b5b-a97b-2d8369fc765f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	partition fVentas = m
 		mode: import
 		source =
