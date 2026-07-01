@@ -1,4 +1,4 @@
-table gcTiempo
+table gc_Tiempo
 	lineageTag: 7786da51-d7b5-4b39-8a9a-5fcf7ea6e7c4
 
 	/// Selector de inteligencia temporal para cualquier KPI.
@@ -61,7 +61,7 @@ table gcTiempo
 		sourceColumn: Name
 		sortByColumn: Orden
 
-	/// Orden nativo del grupo de cálculo gcTiempo.
+	/// Orden nativo del grupo de cálculo gc_Tiempo.
 	column Orden
 		dataType: int64
 		isHidden

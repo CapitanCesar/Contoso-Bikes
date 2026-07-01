@@ -1,16 +1,16 @@
 /// Field parameter nativo para cambiar el atributo de análisis.
-table pfAtributoAnalisis
+table pf_AtributoAnalisis
 	lineageTag: bedf7fe6-c8a6-466d-a44e-1985641f519f
 
-	column pfAtributoAnalisis
+	column pf_AtributoAnalisis
 		lineageTag: 2faeee49-a7bb-46ad-a9ec-b020add68d2b
 		sourceColumn: [Value1]
-		sortByColumn: 'pfAtributoAnalisis Order'
+		sortByColumn: 'pf_AtributoAnalisis Order'
 
 		relatedColumnDetails
-			groupByColumn: 'pfAtributoAnalisis Fields'
+			groupByColumn: 'pf_AtributoAnalisis Fields'
 
-	column 'pfAtributoAnalisis Fields'
+	column 'pf_AtributoAnalisis Fields'
 		isHidden
 		lineageTag: c17e63b5-c698-486f-8825-889ba63ca479
 		sourceColumn: [Value2]
@@ -21,7 +21,7 @@ table pfAtributoAnalisis
 				  "kind": 2
 				}
 
-	column 'pfAtributoAnalisis Order'
+	column 'pf_AtributoAnalisis Order'
 		isHidden
 		lineageTag: 40b9dcbc-01e9-4b73-9f28-c152add07e5c
 		sourceColumn: [Value3]

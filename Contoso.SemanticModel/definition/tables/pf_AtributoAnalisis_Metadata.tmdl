@@ -1,5 +1,5 @@
 /// Helper table para agrupar el field parameter por dimensión de negocio.
-table pfAtributoAnalisis_Metadata
+table pf_AtributoAnalisis_Metadata
 	lineageTag: e57ef77d-0cda-48e1-80f8-7b7a3303b33f
 
 	column Atributo

@@ -26,10 +26,10 @@ ref table dim_Albaran
 ref table dim_Fecha
 ref table _Medidas
 ref table param_Formato
-ref table gcKPI
-ref table gcTiempo
-ref table pfAtributoAnalisis
-ref table pfAtributoAnalisis_Metadata
+ref table gc_KPI
+ref table gc_Tiempo
+ref table pf_AtributoAnalisis
+ref table pf_AtributoAnalisis_Metadata
 
 ref cultureInfo en-US
 

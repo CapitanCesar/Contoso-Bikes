@@ -1,4 +1,4 @@
-table gcKPI
+table gc_KPI
 	lineageTag: f26572de-91fa-4953-89e1-348610a3593c
 
 	/// Selector de KPI principal del modelo comercial.
@@ -85,7 +85,7 @@ table gcKPI
 		sourceColumn: Name
 		sortByColumn: Orden
 
-	/// Orden nativo del grupo de cálculo gcKPI.
+	/// Orden nativo del grupo de cálculo gc_KPI.
 	column Orden
 		dataType: int64
 		isHidden

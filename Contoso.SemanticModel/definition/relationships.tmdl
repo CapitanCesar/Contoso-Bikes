@@ -25,6 +25,6 @@ relationship dim_Fecha_fact_Ventas_Fecha
 relationship param_AtributoAnalisis_Metadata_param_AtributoAnalisis
 	crossFilteringBehavior: bothDirections
 	fromCardinality: one
-	fromColumn: pfAtributoAnalisis_Metadata.Atributo
-	toColumn: pfAtributoAnalisis.pfAtributoAnalisis
+	fromColumn: pf_AtributoAnalisis_Metadata.Atributo
+	toColumn: pf_AtributoAnalisis.pf_AtributoAnalisis
 

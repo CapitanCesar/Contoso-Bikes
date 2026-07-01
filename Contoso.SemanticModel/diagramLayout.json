@@ -130,7 +130,7 @@
             "x": 1541.820133876884,
             "y": 441.758583764965
           },
-          "nodeIndex": "gcKPI",
+          "nodeIndex": "gc_KPI",
           "nodeLineageTag": "f26572de-91fa-4953-89e1-348610a3593c",
           "size": {
             "height": 104,
@@ -143,7 +143,7 @@
             "x": 2172.820133876884,
             "y": 385.758583764965
           },
-          "nodeIndex": "pfAtributoAnalisis",
+          "nodeIndex": "pf_AtributoAnalisis",
           "nodeLineageTag": "bedf7fe6-c8a6-466d-a44e-1985641f519f",
           "size": {
             "height": 152,
@@ -156,7 +156,7 @@
             "x": 2349.820133876884,
             "y": 337.758583764965
           },
-          "nodeIndex": "pfAtributoAnalisis_Metadata",
+          "nodeIndex": "pf_AtributoAnalisis_Metadata",
           "nodeLineageTag": "e57ef77d-0cda-48e1-80f8-7b7a3303b33f",
           "size": {
             "height": 248,
@@ -166,7 +166,7 @@
         },
         {
           "location": {},
-          "nodeIndex": "gcTiempo",
+          "nodeIndex": "gc_Tiempo",
           "nodeLineageTag": "7786da51-d7b5-4b39-8a9a-5fcf7ea6e7c4",
           "size": {
             "height": 128,
