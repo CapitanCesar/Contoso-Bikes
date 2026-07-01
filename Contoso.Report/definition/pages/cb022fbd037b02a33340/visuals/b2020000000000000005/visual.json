@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "b2020000000000000005",
+  "position": {
+    "x": 264,
+    "y": 92,
+    "z": 10,
+    "height": 98,
+    "width": 230
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas Netas YTD Año Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Ventas Netas YTD Año Anterior",
+              "nativeQueryRef": "Ventas Netas YTD Año Anterior"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,524 @@
+/// Tabla contenedora de medidas explícitas del modelo.
+table _Medidas
+	lineageTag: 5879887f-6978-41c8-9e3f-3d4e95aa7f24
+
+	/// Importe neto vendido según líneas de albarán.
+	measure 'Ventas Netas' = SUM( fact_Ventas[TNeto] )
+		displayFolder: Base
+		lineageTag: c2ce739b-a2ee-4262-bbda-b3cd1e9c92e7
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Importe bruto antes de descuento según líneas de albarán.
+	measure 'Ventas Brutas' = SUM( fact_Ventas[TBruto] )
+		displayFolder: Base
+		lineageTag: 2d99e569-2b51-4bff-96e7-f1848efcc1e0
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Coste total asociado a las ventas servidas.
+	measure 'Coste Total' = SUM( fact_Ventas[TCoste] )
+		displayFolder: Base
+		lineageTag: dd08a44a-888f-47e1-b7be-c1852d170598
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Descuento total aplicado sobre las ventas.
+	measure 'Descuento Total' = SUM( fact_Ventas[TDescuento] )
+		displayFolder: Base
+		lineageTag: 30005faa-2588-44a2-a3bb-e1ddf0a2fc1e
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Unidades vendidas sobre albaranes.
+	measure 'Cantidad Vendida' = SUM( fact_Ventas[TCantidad] )
+		displayFolder: Base
+		lineageTag: 81f697b5-3810-42b6-8829-2e2225c7e858
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "#,##0",
+				        1, "#,##0.0,K",
+				        2, "#,##0.0,,M",
+				        "#,##0"
+				    )
+
+	/// Número de albaranes con movimiento comercial.
+	measure 'Nº Albaranes' = DISTINCTCOUNT( fact_Ventas[IdAlbaran] )
+		formatString: #,##0
+		displayFolder: Base
+		lineageTag: 34e88963-d26b-443b-bce6-a5148e95f1b8
+
+	/// Número de clientes con venta en el contexto filtrado.
+	measure 'Nº Clientes' = DISTINCTCOUNT( fact_Ventas[IdCliente] )
+		formatString: #,##0
+		displayFolder: Base
+		lineageTag: 7d6aea32-ff71-4fb0-b061-29294d233dd8
+
+	/// Número de productos distintos vendidos.
+	measure 'Nº Productos' = DISTINCTCOUNT( fact_Ventas[IdProducto] )
+		formatString: #,##0
+		displayFolder: Base
+		lineageTag: bf24b6d4-9e6d-4e92-947d-c9bd5d302704
+
+	/// Margen bruto generado por la venta servida.
+	measure 'Margen Bruto' =
+			VAR Ventas = [Ventas Netas]
+			VAR Coste = [Coste Total]
+			RETURN
+			    Ventas - Coste
+		displayFolder: Ratios y KPIs
+		lineageTag: 6f7c9c14-81f7-46ab-85eb-2d3a9436a43d
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Porcentaje de margen bruto sobre ventas netas.
+	measure 'Margen Bruto %' =
+			VAR Margen = [Margen Bruto]
+			VAR Ventas = [Ventas Netas]
+			RETURN
+			    DIVIDE( Margen, Ventas )
+		formatString: 0.0%
+		displayFolder: Ratios y KPIs
+		lineageTag: 1b5dd139-3e13-4cc5-9827-7220cdac9fd5
+
+	/// Venta neta media por albarán.
+	measure 'Ticket Medio' =
+			VAR Ventas = [Ventas Netas]
+			VAR Albaranes = [Nº Albaranes]
+			RETURN
+			    DIVIDE( Ventas, Albaranes )
+		displayFolder: Ratios y KPIs
+		lineageTag: 15550c59-b3c9-461c-a525-b8ca9a1938e0
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Venta neta media por cliente en el contexto seleccionado.
+	measure 'Venta Media por Cliente' =
+			VAR Ventas = [Ventas Netas]
+			VAR Clientes = [Nº Clientes]
+			RETURN
+			    DIVIDE( Ventas, Clientes )
+		displayFolder: Ratios y KPIs
+		lineageTag: 2272079d-d959-44cc-9fff-15bdbff42c89
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Precio neto medio por unidad vendida.
+	measure 'Precio Medio' =
+			VAR Ventas = [Ventas Netas]
+			VAR Cantidad = [Cantidad Vendida]
+			RETURN
+			    DIVIDE( Ventas, Cantidad )
+		displayFolder: Ratios y KPIs
+		lineageTag: 8378738f-c8e7-4504-883e-b5a3e1c5c5f8
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0.00",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0.00"
+				    )
+
+	/// Coste medio por unidad vendida.
+	measure 'Coste Unitario Medio' =
+			VAR Coste = [Coste Total]
+			VAR Cantidad = [Cantidad Vendida]
+			RETURN
+			    DIVIDE( Coste, Cantidad )
+		displayFolder: Ratios y KPIs
+		lineageTag: fe1fecb0-83b7-4100-b26c-bcb86e6e7652
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0.00",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0.00"
+				    )
+
+	/// Porcentaje de descuento concedido sobre la venta bruta.
+	measure 'Descuento %' =
+			VAR Descuento = [Descuento Total]
+			VAR Bruto = [Ventas Brutas]
+			RETURN
+			    DIVIDE( Descuento, Bruto )
+		formatString: 0.0%
+		displayFolder: Ratios y KPIs
+		lineageTag: 8a01da26-0cbf-49db-8582-eaa912b426c7
+
+	/// Ventas netas del canal online.
+	measure 'Ventas Online' =
+			CALCULATE(
+			    [Ventas Netas],
+			    'dim_Cliente'[Canal] = "Online"
+			)
+		displayFolder: Segmentación
+		lineageTag: dfbb1784-ebc3-4f76-839c-424b0eb933d6
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas del canal tradicional de tiendas y concesionarios.
+	measure 'Ventas Tiendas y concesionarios' =
+			CALCULATE(
+			    [Ventas Netas],
+			    'dim_Cliente'[Canal] = "Tiendas y concesionarios"
+			)
+		displayFolder: Segmentación
+		lineageTag: 2198ceca-a875-421e-9637-cb02df6556b3
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Margen bruto generado en el canal online.
+	measure 'Margen Online' =
+			CALCULATE(
+			    [Margen Bruto],
+			    'dim_Cliente'[Canal] = "Online"
+			)
+		displayFolder: Segmentación
+		lineageTag: 62b8f3e3-ac58-464f-8023-d00dc43a7e14
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Margen bruto generado en el canal de tiendas y concesionarios.
+	measure 'Margen Tiendas y concesionarios' =
+			CALCULATE(
+			    [Margen Bruto],
+			    'dim_Cliente'[Canal] = "Tiendas y concesionarios"
+			)
+		displayFolder: Segmentación
+		lineageTag: e9b5bef0-9b3a-4e8b-9898-fe6e8a0414aa
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas del bloque de bicicletas y marcos tratado como producto tractor.
+	measure 'Ventas Bicicletas' =
+			CALCULATE(
+			    [Ventas Netas],
+			    'dim_Producto'[Rol Estratégico] = "Producto tractor"
+			)
+		displayFolder: Segmentación
+		lineageTag: 2a620936-0f70-4aa6-a885-2af64d118f00
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas del bloque complementario de mayor margen esperado.
+	measure 'Ventas Complementarias' =
+			CALCULATE(
+			    [Ventas Netas],
+			    'dim_Producto'[Rol Estratégico] = "Venta complementaria"
+			)
+		displayFolder: Segmentación
+		lineageTag: bb4d1700-2539-4f45-b945-202c9c314d5e
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Peso de las bicicletas sobre la venta neta total.
+	measure '% Ventas Bicicletas' =
+			VAR VentasBicicletas = [Ventas Bicicletas]
+			VAR VentasTotales = [Ventas Netas]
+			RETURN
+			    DIVIDE( VentasBicicletas, VentasTotales )
+		formatString: 0.0%
+		displayFolder: Segmentación
+		lineageTag: d5e5fc61-afac-41af-992b-430b2ae99d00
+
+	/// Peso de la venta complementaria sobre la venta neta total.
+	measure '% Ventas Complementarias' =
+			VAR VentasComplementarias = [Ventas Complementarias]
+			VAR VentasTotales = [Ventas Netas]
+			RETURN
+			    DIVIDE( VentasComplementarias, VentasTotales )
+		formatString: 0.0%
+		displayFolder: Segmentación
+		lineageTag: f5611cba-4e7b-411a-9c41-3feb2b567c2c
+
+	/// Medida ancla para la selección dinámica de KPIs mediante grupos de cálculo.
+	measure 'KPI Seleccionado' = [Ventas Netas]
+		displayFolder: Ratios y KPIs
+		lineageTag: ccb153b0-f851-4a77-8b2d-a893a009e547
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas acumuladas en el año hasta la fecha visible.
+	measure 'Ventas Netas YTD' = TOTALYTD( [Ventas Netas], dim_Fecha[Fecha] )
+		displayFolder: Time Intelligence\Acumulados
+		lineageTag: 03350f47-e0ef-49aa-a607-7f6b411769e2
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas acumuladas en el trimestre hasta la fecha visible.
+	measure 'Ventas Netas QTD' = TOTALQTD( [Ventas Netas], dim_Fecha[Fecha] )
+		displayFolder: Time Intelligence\Acumulados
+		lineageTag: 7337320e-aa3e-4757-88f6-3138e223369f
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas acumuladas en el mes hasta la fecha visible.
+	measure 'Ventas Netas MTD' = TOTALMTD( [Ventas Netas], dim_Fecha[Fecha] )
+		displayFolder: Time Intelligence\Acumulados
+		lineageTag: a0a472dc-5756-4617-b8df-f4d93bb5ef67
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas del mismo periodo del año anterior.
+	measure 'Ventas Netas Año Anterior' = CALCULATE( [Ventas Netas], SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+		displayFolder: Time Intelligence\Período Anterior
+		lineageTag: 2358bc85-65c9-48fc-8ce4-d5a1d03fac9c
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Ventas netas del mes anterior.
+	measure 'Ventas Netas Mes Anterior' = CALCULATE( [Ventas Netas], DATEADD( dim_Fecha[Fecha], -1, MONTH ) )
+		displayFolder: Time Intelligence\Período Anterior
+		lineageTag: a313b891-f877-4c9d-8058-888f8675ea50
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Variación absoluta de ventas netas frente al mismo periodo del año anterior.
+	measure 'Ventas Netas Variación vs AA' =
+			VAR Actual = [Ventas Netas]
+			VAR Anterior = [Ventas Netas Año Anterior]
+			RETURN
+			    Actual - Anterior
+		displayFolder: Time Intelligence\Variación
+		lineageTag: 6a87c3c6-53d5-43c7-afaf-52a306b9f108
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Variación porcentual de ventas netas frente al mismo periodo del año anterior.
+	measure 'Ventas Netas Variación % vs AA' =
+			VAR Actual = [Ventas Netas]
+			VAR Anterior = [Ventas Netas Año Anterior]
+			RETURN
+			    DIVIDE( Actual - Anterior, Anterior )
+		formatString: 0.0%
+		displayFolder: Time Intelligence\Variación
+		lineageTag: b8ce76f3-7a46-4102-bc52-4d15f98e890c
+
+	/// Ventas netas acumuladas YTD del año anterior.
+	measure 'Ventas Netas YTD Año Anterior' = CALCULATE( [Ventas Netas YTD], SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+		displayFolder: Time Intelligence\Acumulado Anterior
+		lineageTag: 00270ea1-9673-4569-a345-a2fe7e37d39d
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Variación porcentual entre el YTD actual y el YTD del año anterior.
+	measure 'Ventas Netas Variación % YTD vs AA' =
+			VAR Actual = [Ventas Netas YTD]
+			VAR Anterior = [Ventas Netas YTD Año Anterior]
+			RETURN
+			    DIVIDE( Actual - Anterior, Anterior )
+		formatString: 0.0%
+		displayFolder: Time Intelligence\Acumulado Anterior
+		lineageTag: 697bf1f9-72d0-47a3-bc9b-445ad7544fea
+
+	column Placeholder
+		isHidden
+		lineageTag: 617b3256-0805-4a9f-a7b3-31273bc4185b
+		isNameInferred
+		sourceColumn: [Placeholder]
+
+	partition _Medidas = calculated
+		mode: import
+		source = ROW( "Placeholder", 0 )
+

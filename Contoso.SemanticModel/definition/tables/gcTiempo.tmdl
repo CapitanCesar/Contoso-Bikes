@@ -1,0 +1,72 @@
+table gcTiempo
+	lineageTag: 7786da51-d7b5-4b39-8a9a-5fcf7ea6e7c4
+
+	/// Selector de inteligencia temporal para cualquier KPI.
+	calculationGroup
+		precedence: 20
+
+		/// Comportamiento por defecto cuando no hay una única selección.
+		multipleOrEmptySelectionExpression = SELECTEDMEASURE()
+
+		/// Devuelve la medida base cuando no hay selección temporal.
+		noSelectionExpression = SELECTEDMEASURE()
+
+		/// Current Period de la medida seleccionada.
+		calculationItem CP = SELECTEDMEASURE()
+
+		/// Mismo periodo del año anterior.
+		calculationItem LY = CALCULATE( SELECTEDMEASURE(), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+
+		/// Variación absoluta entre CP y LY.
+		calculationItem YoY =
+				VAR CP = SELECTEDMEASURE()
+				VAR LY = CALCULATE( SELECTEDMEASURE(), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+				RETURN
+				    CP - LY
+
+		/// Variación porcentual entre CP y LY.
+		calculationItem %YoY =
+				VAR CP = SELECTEDMEASURE()
+				VAR LY = CALCULATE( SELECTEDMEASURE(), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+				RETURN
+				    DIVIDE( CP - LY, LY )
+
+			formatStringDefinition = "0.0%;-0.0%;0.0%"
+
+		/// Year-to-date de la medida seleccionada.
+		calculationItem YTD = TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] )
+
+		/// Year-to-date del mismo periodo del año anterior.
+		calculationItem 'LY YTD' = CALCULATE( TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] ), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+
+		/// Variación absoluta entre YTD y LY YTD.
+		calculationItem 'YoY YTD' =
+				VAR YTDActual = TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] )
+				VAR LYYTD = CALCULATE( TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] ), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+				RETURN
+				    YTDActual - LYYTD
+
+		/// Variación porcentual entre YTD y LY YTD.
+		calculationItem '%YoY YTD' =
+				VAR YTDActual = TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] )
+				VAR LYYTD = CALCULATE( TOTALYTD( SELECTEDMEASURE(), dim_Fecha[Fecha] ), SAMEPERIODLASTYEAR( dim_Fecha[Fecha] ) )
+				RETURN
+				    DIVIDE( YTDActual - LYYTD, LYYTD )
+
+			formatStringDefinition = "0.0%;-0.0%;0.0%"
+
+	column 'Análisis Temporal'
+		dataType: string
+		lineageTag: 86585d32-d599-454b-a376-0f40792861b4
+		sourceColumn: Name
+		sortByColumn: Orden
+
+	/// Orden nativo del grupo de cálculo gcTiempo.
+	column Orden
+		dataType: int64
+		isHidden
+		lineageTag: 43a41d30-1faf-4f52-b888-879411fb8a59
+		sourceColumn: Ordinal
+
+	partition Partition_calc_Tiempo = calculationGroup
+

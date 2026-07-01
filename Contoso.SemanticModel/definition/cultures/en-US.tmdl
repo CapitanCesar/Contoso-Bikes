@@ -1,0 +1,32 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Version": "1.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "dim_cliente.canal": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_Cliente",
+			        "ConceptualProperty": "Canal"
+			      },
+			      "State": "Generated"
+			    },
+			    "dim_cliente.cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_Cliente",
+			        "ConceptualProperty": "Cliente"
+			      },
+			      "State": "Generated"
+			    },
+			    "dim_cliente.tipo_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_Cliente",
+			        "ConceptualProperty": "Tipo Cliente"
+			      },
+			      "State": "Generated"
+			    }
+			  }
+			}
+		contentType: json
+

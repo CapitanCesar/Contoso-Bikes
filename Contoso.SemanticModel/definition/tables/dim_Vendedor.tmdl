@@ -1,0 +1,39 @@
+/// Dimensión de vendedores de la red comercial.
+table dim_Vendedor
+	lineageTag: 81215117-b127-490a-a69d-ec6c3d37ec90
+
+	column IdVendedor
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 63b4aeb3-f0d9-430e-ac1e-582db1634d1c
+		summarizeBy: sum
+		sourceColumn: IdVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vendedor
+		dataType: string
+		lineageTag: 237ae13f-c4a8-4da2-babd-cf145544b6ba
+		summarizeBy: none
+		sourceColumn: Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dVendedores = m
+		mode: import
+		queryGroup: Dimensiones
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_Vendedor_Table = Source{[Item="xerppasm_Vendedor",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(xerppasm_Vendedor_Table,{{"xerppasm_idvendedor", Int64.Type}, {"xerppasm_nombrevendedor", type text}, {"xerppasm_vendedorid", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"xerppasm_idvendedor", "IdVendedor"}, {"xerppasm_nombrevendedor", "Vendedor"}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Renamed Columns",{"IdVendedor", "Vendedor"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

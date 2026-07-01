@@ -1,0 +1,64 @@
+/// Helper table para agrupar el field parameter por dimensión de negocio.
+table pfAtributoAnalisis_Metadata
+	lineageTag: e57ef77d-0cda-48e1-80f8-7b7a3303b33f
+
+	column Atributo
+		isHidden
+		lineageTag: ef1dc93c-07af-4295-942e-ab976c17d91f
+		isNameInferred
+		sourceColumn: [Atributo]
+		sortByColumn: 'Orden Atributo'
+
+	column Dimensión
+		isHidden
+		lineageTag: 0efa7d05-ab11-4e47-92b4-42d54b7c1eec
+		isNameInferred
+		sourceColumn: [Dimensión]
+		sortByColumn: 'Orden Dimensión'
+
+	column 'Orden Dimensión'
+		isHidden
+		lineageTag: 656999eb-101d-41bc-a02c-b21ca1b395d3
+		isNameInferred
+		sourceColumn: [Orden Dimensión]
+
+	column 'Orden Atributo'
+		isHidden
+		lineageTag: eeed45cb-603d-4c45-b92f-886b562f50de
+		isNameInferred
+		sourceColumn: [Orden Atributo]
+
+	/// Jerarquía para navegar el field parameter por dimensión de negocio.
+	hierarchy 'Navegación Atributo'
+		lineageTag: 60128fb0-4c74-4c4d-a266-211d9d379c29
+
+		level Dimensión
+			lineageTag: ae5559cf-66ae-430a-9dc1-868c9a16c2b8
+			column: Dimensión
+
+		level Atributo
+			lineageTag: 95e3dc9c-87ec-4265-b24e-5dc28f9d3623
+			column: Atributo
+
+	partition param_AtributoAnalisis_Metadata = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Atributo", STRING,
+				    "Dimensión", STRING,
+				    "Orden Dimensión", INTEGER,
+				    "Orden Atributo", INTEGER,
+				    {
+				        { "Canal", "Cliente", 1, 1 },
+				        { "Cliente", "Cliente", 1, 2 },
+				        { "Tipo Cliente", "Cliente", 1, 3 },
+				        { "Provincia", "Geografía", 2, 4 },
+				        { "País", "Geografía", 2, 5 },
+				        { "Vendedor", "Comercial", 3, 6 },
+				        { "Familia Comercial", "Producto", 4, 7 },
+				        { "SubFamilia", "Producto", 4, 8 },
+				        { "Producto", "Producto", 4, 9 },
+				        { "Documento", "Albarán", 5, 10 }
+				    }
+				)
+

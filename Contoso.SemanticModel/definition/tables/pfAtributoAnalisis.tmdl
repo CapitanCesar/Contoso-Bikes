@@ -1,0 +1,46 @@
+/// Field parameter nativo para cambiar el atributo de análisis.
+table pfAtributoAnalisis
+	lineageTag: bedf7fe6-c8a6-466d-a44e-1985641f519f
+
+	column pfAtributoAnalisis
+		lineageTag: 2faeee49-a7bb-46ad-a9ec-b020add68d2b
+		sourceColumn: [Value1]
+		sortByColumn: 'pfAtributoAnalisis Order'
+
+		relatedColumnDetails
+			groupByColumn: 'pfAtributoAnalisis Fields'
+
+	column 'pfAtributoAnalisis Fields'
+		isHidden
+		lineageTag: c17e63b5-c698-486f-8825-889ba63ca479
+		sourceColumn: [Value2]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'pfAtributoAnalisis Order'
+		isHidden
+		lineageTag: 40b9dcbc-01e9-4b73-9f28-c152add07e5c
+		sourceColumn: [Value3]
+
+	partition param_AtributoAnalisis = calculated
+		mode: import
+		source =
+				{
+				    ( "Canal", NAMEOF( 'dim_Cliente'[Canal] ), 0 ),
+				    ( "Cliente", NAMEOF( 'dim_Cliente'[Cliente] ), 1 ),
+				    ( "Tipo Cliente", NAMEOF( 'dim_Cliente'[Tipo Cliente] ), 2 ),
+				    ( "Provincia", NAMEOF( 'dim_Geografia'[Provincia] ), 3 ),
+				    ( "País", NAMEOF( 'dim_Geografia'[País] ), 4 ),
+				    ( "Vendedor", NAMEOF( 'dim_Vendedor'[Vendedor] ), 5 ),
+				    ( "Familia Comercial", NAMEOF( 'dim_Producto'[Familia Comercial] ), 6 ),
+				    ( "SubFamilia", NAMEOF( 'dim_Producto'[SubFamilia] ), 7 ),
+				    ( "Producto", NAMEOF( 'dim_Producto'[Producto] ), 8 ),
+				    ( "Documento", NAMEOF( 'dim_Albaran'[Documento] ), 9 )
+				}
+
+	annotation PBI_ResultType = FieldParameter
+

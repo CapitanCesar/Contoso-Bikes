@@ -1,0 +1,29 @@
+/// Selector de formato dinámico para importes y cantidades.
+table param_Formato
+	lineageTag: 4202986d-b004-4e79-8810-4396aa7d4dec
+
+	column Formato
+		lineageTag: 1f1d8bae-6632-43ff-b97f-35e04bb9fa0d
+		isNameInferred
+		sourceColumn: [Formato]
+		sortByColumn: FormatoOrder
+
+	column FormatoOrder
+		isHidden
+		lineageTag: ffddfb06-714d-4b6b-a2fe-511041ac1246
+		isNameInferred
+		sourceColumn: [FormatoOrder]
+
+	partition param_Formato = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Formato", STRING,
+				    "FormatoOrder", INTEGER,
+				    {
+				        { "Sin resumir", 0 },
+				        { "Miles (K)", 1 },
+				        { "Millones (M)", 2 }
+				    }
+				)
+

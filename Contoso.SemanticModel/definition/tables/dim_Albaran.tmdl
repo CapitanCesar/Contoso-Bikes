@@ -1,0 +1,73 @@
+/// Dimensión de documentos de albarán para trazabilidad comercial.
+table dim_Albaran
+	lineageTag: 0f9227a9-2de7-4c3f-b9a0-ef50146a4926
+
+	column Fecha
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: ca548428-9a44-4844-be69-1bb616d98c37
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column IdAlbaran
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9f30d793-d703-457e-a8c7-858e256ff1cf
+		summarizeBy: sum
+		sourceColumn: IdAlbaran
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdCliente
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2cfac3c5-718c-4a7b-99d0-0808a69d84d2
+		summarizeBy: sum
+		sourceColumn: IdCliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdDireccion
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e204977a-fefe-4a5c-9eb9-b5280c29066f
+		summarizeBy: sum
+		sourceColumn: IdDireccion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Documento
+		dataType: string
+		lineageTag: 1db2c1b2-f482-442e-8198-607968968f09
+		summarizeBy: none
+		sourceColumn: Documento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dVentas = m
+		mode: import
+		queryGroup: Dimensiones
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_AlbaranCabecera_Table = Source{[Item="xerppasm_AlbaranCabecera",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(xerppasm_AlbaranCabecera_Table,{{"xerppaac_idalumno", type any}, {"xerppaac_idmatricula", type any}, {"xerppasm_albaranescabeceraid", type text}, {"xerppasm_cancelado", type any}, {"xerppasm_cobrado", type any}, {"xerppasm_cpgc", Int64.Type}, {"xerppasm_fechaalbaran", type datetime}, {"xerppasm_fechacierre", type any}, {"xerppasm_fechavencimiento", type any}, {"xerppasm_idalbaran", Int64.Type}, {"xerppasm_idcliente", Int64.Type}, {"xerppasm_iddimension", type any}, {"xerppasm_iddirecciondeenvio", Int64.Type}, {"xerppasm_idempresa", Int64.Type}, {"xerppasm_idestado", type any}, {"xerppasm_idorigen", Int64.Type}, {"xerppasm_idtipodocumento", type any}, {"xerppasm_idtransporte", type any}, {"xerppasm_ndocumento", type text}, {"xerppasm_referencia", type any}, {"xerppasm_serie", type any}, {"xerppasm_tbruto", type number}, {"xerppasm_tbruto_base", type number}, {"xerppasm_tdescuento", type any}, {"xerppasm_tdescuento_base", type any}, {"xerppasm_tgastotransporte", type number}, {"xerppasm_tgastotransporte_base", type number}, {"xerppasm_tipodocumento", Int64.Type}, {"xerppasm_tipodocumento2", type text}, {"xerppasm_tiva", type number}, {"xerppasm_tiva_base", type number}, {"xerppasm_tmargencomercial", type any}, {"xerppasm_tmargencomercial_base", type any}, {"xerppasm_tneto", type number}, {"xerppasm_tneto_base", type number}, {"xerppasm_totalalbaran", type number}, {"xerppasm_totalalbaran_base", type number}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"xerppasm_fechaalbaran", "xerppasm_idalbaran", "xerppasm_idcliente", "xerppasm_iddirecciondeenvio", "xerppasm_ndocumento", "xerppasm_referencia", "xerppasm_serie"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Other Columns",{{"xerppasm_fechaalbaran", type date}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"xerppasm_fechaalbaran", "Fecha"}, {"xerppasm_idalbaran", "IdAlbaran"}, {"xerppasm_idcliente", "IdCliente"}, {"xerppasm_iddirecciondeenvio", "IdDireccion"}, {"xerppasm_ndocumento", "Documento"}}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns",{"Fecha", "IdAlbaran", "IdCliente", "IdDireccion", "Documento"})
+				in
+				    #"Removed Other Columns1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,185 @@
+/// Dimensión de clientes para segmentación comercial y análisis de canal.
+table dim_Cliente
+	lineageTag: 8e592f28-27c9-4a78-9b88-90bc099d6fbc
+
+	column IdCliente
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c4d4d436-a0ee-429c-a8fa-5637a02f06bb
+		summarizeBy: sum
+		sourceColumn: IdCliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cliente
+		dataType: string
+		lineageTag: 11538dc0-ab8a-499e-99e9-3205bdbce9c5
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo Cliente'
+		dataType: string
+		isHidden
+		lineageTag: f1f4aefc-d95d-4cb9-bbb2-ca620cc8f070
+		summarizeBy: none
+		sourceColumn: Grupo Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column CIF
+		dataType: string
+		lineageTag: 6974ecc1-ad1c-4b07-98c0-67700a65bcf9
+		summarizeBy: none
+		sourceColumn: CIF
+
+		annotation SummarizationSetBy = Automatic
+
+	column Contacto
+		dataType: string
+		lineageTag: 240fd20e-7305-458a-a591-bb8b59e54cf2
+		summarizeBy: none
+		sourceColumn: Contacto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Email
+		dataType: string
+		lineageTag: fef77c5d-28ca-4553-ada2-7520814af475
+		summarizeBy: none
+		sourceColumn: Email
+
+		annotation SummarizationSetBy = Automatic
+
+	column Telófono
+		dataType: string
+		lineageTag: 35ed4880-fcab-48f0-8e32-dd89796eea26
+		summarizeBy: none
+		sourceColumn: Telófono
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dirección
+		dataType: string
+		isHidden
+		lineageTag: acf7f8d2-88d1-42b2-b441-b8cde86ced67
+		summarizeBy: none
+		sourceColumn: Dirección
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Postal'
+		dataType: string
+		isHidden
+		lineageTag: d6f7db33-b0eb-4c79-b9f5-46e2cfe48d8b
+		summarizeBy: none
+		sourceColumn: Código Postal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Población
+		dataType: string
+		isHidden
+		lineageTag: 32ba9e3a-67c9-47c6-8654-15a4d97166b3
+		summarizeBy: none
+		sourceColumn: Población
+
+		annotation SummarizationSetBy = Automatic
+
+	column Provincia
+		dataType: string
+		isHidden
+		lineageTag: 0d2a5b24-fac5-4e70-bcbc-f9f60b19a5e2
+		summarizeBy: none
+		sourceColumn: Provincia
+
+		annotation SummarizationSetBy = Automatic
+
+	column País
+		dataType: string
+		isHidden
+		lineageTag: b58b8621-ea6f-41cd-8145-723166038e90
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitud
+		dataType: double
+		isHidden
+		lineageTag: 0a463e97-c995-48b3-88a6-a3ac9052339a
+		summarizeBy: sum
+		sourceColumn: Latitud
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitud
+		dataType: double
+		isHidden
+		lineageTag: 6696e250-99b0-45dd-bfd4-0fedf1c5dc07
+		summarizeBy: sum
+		sourceColumn: Longitud
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Código País'
+		dataType: string
+		isHidden
+		lineageTag: 51d50e43-faba-4f91-b91d-67243bfafec5
+		summarizeBy: none
+		sourceColumn: Código País
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Canal comercial derivado del tipo de cliente del maestro comercial.
+	column Canal =
+			VAR GrupoCliente = UPPER( TRIM( COALESCE( 'dim_Cliente'[Grupo Cliente], "" ) ) )
+			RETURN
+			    IF(
+			        GrupoCliente = "TIENDA",
+			        "Tiendas y concesionarios",
+			        "Online"
+			    )
+		dataType: string
+		lineageTag: 2bb7ebc8-ed14-4e1b-a64d-16850bf6caef
+
+	/// Clasificación normalizada del cliente para análisis comercial.
+	column 'Tipo Cliente' =
+			VAR GrupoCliente = UPPER( TRIM( COALESCE( 'dim_Cliente'[Grupo Cliente], "" ) ) )
+			RETURN
+			    IF(
+			        GrupoCliente = "TIENDA",
+			        "Tienda",
+			        "Cliente individual"
+			    )
+		dataType: string
+		lineageTag: 4adf1632-2399-4303-b51e-592a11d98f07
+
+	partition dClientes = m
+		mode: import
+		queryGroup: Dimensiones
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_Clientes_Table = Source{[Item="xerppasm_Clientes",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(xerppasm_Clientes_Table,{{"xerppasm_cif", type text}, {"xerppasm_clientesid", type text}, {"xerppasm_codigopais", type text}, {"xerppasm_contacto", type text}, {"xerppasm_cp", type text}, {"xerppasm_direccion", type text}, {"xerppasm_email", type text}, {"xerppasm_fax", type any}, {"xerppasm_grupocliente", type text}, {"xerppasm_idcliente", Int64.Type}, {"xerppasm_idempresa", type any}, {"xerppasm_idgrupocliente", type any}, {"xerppasm_idvendedor", type any}, {"xerppasm_nombrecliente", type text}, {"xerppasm_notas", type any}, {"xerppasm_pais", type text}, {"xerppasm_poblacion", type text}, {"xerppasm_provincia", type text}, {"xerppasm_telefono1", type text}, {"xerppasm_telefono2", type any}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"xerppasm_cif", "xerppasm_codigopais", "xerppasm_contacto", "xerppasm_cp", "xerppasm_direccion", "xerppasm_email", "xerppasm_fax", "xerppasm_grupocliente", "xerppasm_idcliente", "xerppasm_latitud", "xerppasm_longitud", "xerppasm_nombrecliente", "xerppasm_pais", "xerppasm_poblacion", "xerppasm_provincia", "xerppasm_telefono1", "xerppasm_telefono2"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"xerppasm_cif", "CIF"}, {"xerppasm_codigopais", "Código País"}, {"xerppasm_contacto", "Contacto"}, {"xerppasm_cp", "Código Postal"}, {"xerppasm_direccion", "Dirección"}, {"xerppasm_email", "Email"}, {"xerppasm_grupocliente", "Grupo Cliente"}, {"xerppasm_idcliente", "IdCliente"}, {"xerppasm_latitud", "Latitud"}, {"xerppasm_longitud", "Longitud"}, {"xerppasm_nombrecliente", "Cliente"}, {"xerppasm_pais", "País"}, {"xerppasm_poblacion", "Población"}, {"xerppasm_provincia", "Provincia"}, {"xerppasm_telefono1", "Telófono"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns",".",",",Replacer.ReplaceText,{"Latitud"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",".",",",Replacer.ReplaceText,{"Longitud"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value1",{{"Latitud", type number}, {"Longitud", type number}}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Changed Type1",{"CIF", "Código País", "Contacto", "Código Postal", "Dirección", "Email", "Grupo Cliente", "IdCliente", "Latitud", "Longitud", "Cliente", "País", "Población", "Provincia", "Telófono"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Other Columns1",{"IdCliente", "Cliente", "Grupo Cliente", "CIF", "Contacto", "Email", "Telófono", "Dirección", "Código Postal", "Población", "Provincia", "País", "Latitud", "Longitud", "Código País"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

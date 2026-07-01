@@ -1,0 +1,150 @@
+/// Tabla de hechos a nivel de línea de albarán. Contiene cantidades, importes y costes servidos.
+table fact_Ventas
+	isHidden
+	lineageTag: 0c0703ff-fce1-45a4-b36e-24373418e044
+
+	column IdAlbaran
+		dataType: int64
+		formatString: 0
+		lineageTag: d61b5a54-b0ee-44db-a974-d6515056ed5c
+		summarizeBy: sum
+		sourceColumn: IdAlbaran
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdProducto
+		dataType: int64
+		formatString: 0
+		lineageTag: bfedf1fd-1787-4b9e-87e0-2bd95d462305
+		summarizeBy: sum
+		sourceColumn: IdProducto
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdVendedor
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ef48b85-f9ce-4fe2-8fe6-1d90a700c53c
+		summarizeBy: sum
+		sourceColumn: IdVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column TCantidad
+		dataType: int64
+		formatString: 0
+		lineageTag: b3b73b7b-3cf4-4876-948e-4fe8e1dd8f61
+		summarizeBy: sum
+		sourceColumn: TCantidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precio_Unitario
+		dataType: double
+		lineageTag: 4929fa0c-5878-4aa7-8351-e9eb31189b9b
+		summarizeBy: sum
+		sourceColumn: Precio_Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TCoste_Unitario
+		dataType: double
+		lineageTag: e91ec612-21b2-4172-906c-d0a48c6808c9
+		summarizeBy: sum
+		sourceColumn: TCoste_Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TBruto
+		dataType: double
+		lineageTag: b03f5ee6-e560-4b8e-929b-32ed5da2ffb4
+		summarizeBy: sum
+		sourceColumn: TBruto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TCoste
+		dataType: double
+		lineageTag: 557ddd42-7fe9-4cb9-9adc-4362afb64ab7
+		summarizeBy: sum
+		sourceColumn: TCoste
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TDescuento
+		dataType: double
+		lineageTag: 8098df8f-668e-4709-82dc-f0e98c2d27dd
+		summarizeBy: sum
+		sourceColumn: TDescuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TNeto
+		dataType: double
+		lineageTag: c424956f-7907-4e1c-9ee7-be2d9430ba24
+		summarizeBy: sum
+		sourceColumn: TNeto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Fecha
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 93c25186-1142-4788-9904-f9f9582e1b80
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column IdCliente
+		dataType: int64
+		formatString: 0
+		lineageTag: 0e45ee8e-160a-43bc-b2e7-a9a65e8d9f75
+		summarizeBy: sum
+		sourceColumn: IdCliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdDireccion
+		dataType: int64
+		formatString: 0
+		lineageTag: ebf0f6cd-bb75-455a-9151-f8212b582c65
+		summarizeBy: sum
+		sourceColumn: IdDireccion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fVentas = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_AlbaranLinea_Table = Source{[Item="xerppasm_AlbaranLinea",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(xerppasm_AlbaranLinea_Table,{{"xerppasm_albaraneslineasid", type text}, {"xerppasm_bruto", type number}, {"xerppasm_bruto_base", type number}, {"xerppasm_cantidad", Int64.Type}, {"xerppasm_cantidadbase", type any}, {"xerppasm_concepto", type any}, {"xerppasm_costeunitario", type number}, {"xerppasm_costeunitario_base", type number}, {"xerppasm_idalbaran", Int64.Type}, {"xerppasm_idalmacen", type any}, {"xerppasm_idempresa", Int64.Type}, {"xerppasm_identificadoralbaran", type any}, {"xerppasm_idlineaalbaran", Int64.Type}, {"xerppasm_idmedida", type any}, {"xerppasm_idpedidolinea", type any}, {"xerppasm_idproducto", Int64.Type}, {"xerppasm_idproveedor", type any}, {"xerppasm_idruta", type any}, {"xerppasm_idvendedor", Int64.Type}, {"xerppasm_linea", Int64.Type}, {"xerppasm_ndocumento", type any}, {"xerppasm_pu", type number}, {"xerppasm_pu_base", type number}, {"xerppasm_tcoste", type number}, {"xerppasm_tcoste_base", type number}, {"xerppasm_tdescuento", type number}, {"xerppasm_tdescuento_base", type number}, {"xerppasm_tiva", type any}, {"xerppasm_tiva_base", type any}, {"xerppasm_tmargencomercial", type number}, {"xerppasm_tmargencomercial_base", type number}, {"xerppasm_tneto", type number}, {"xerppasm_tneto_base", type number}, {"xerppasm_totallinea", type any}, {"xerppasm_totallinea_base", type any}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"xerppasm_bruto", "xerppasm_cantidad", "xerppasm_costeunitario", "xerppasm_idalbaran", "xerppasm_idproducto", "xerppasm_idvendedor", "xerppasm_pu", "xerppasm_tcoste", "xerppasm_tdescuento", "xerppasm_tiva", "xerppasm_tneto", "xerppasm_totallinea"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"xerppasm_bruto", "TBruto"}, {"xerppasm_cantidad", "TCantidad"}, {"xerppasm_costeunitario", "TCoste_Unitario"}, {"xerppasm_idalbaran", "IdAlbaran"}, {"xerppasm_idproducto", "IdProducto"}, {"xerppasm_idvendedor", "IdVendedor"}, {"xerppasm_pu", "Precio_Unitario"}, {"xerppasm_tcoste", "TCoste"}, {"xerppasm_tdescuento", "TDescuento"}, {"xerppasm_tneto", "TNeto"}}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns",{"TBruto", "TCantidad", "TCoste_Unitario", "IdAlbaran", "IdProducto", "IdVendedor", "Precio_Unitario", "TCoste", "TDescuento", "TNeto"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Other Columns1",{"IdAlbaran", "IdProducto", "IdVendedor", "TCantidad", "Precio_Unitario", "TCoste_Unitario", "TBruto", "TCoste", "TDescuento", "TNeto"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Reordered Columns", {"IdAlbaran"}, dVentas, {"IdAlbaran"}, "dVentas", JoinKind.LeftOuter),
+				    #"Expanded dVentas" = Table.ExpandTableColumn(#"Merged Queries", "dVentas", {"Fecha", "IdCliente", "IdDireccion"}, {"Fecha", "IdCliente", "IdDireccion"})
+				in
+				    #"Expanded dVentas"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

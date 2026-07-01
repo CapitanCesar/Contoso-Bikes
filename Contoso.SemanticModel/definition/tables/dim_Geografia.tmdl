@@ -1,0 +1,124 @@
+/// Dimensión geográfica de dirección de envío.
+table dim_Geografia
+	lineageTag: 12ec07ea-d048-4abd-a30b-e052f7bdd6cd
+
+	column IdDireccion
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7d33db1c-ff26-44bd-a5b5-0f11fa2b2582
+		summarizeBy: sum
+		sourceColumn: IdDireccion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Postal'
+		dataType: string
+		lineageTag: 9cb5d65d-bf48-497b-8f88-39bb80212197
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: Código Postal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Población
+		dataType: string
+		lineageTag: 9cf7fa64-93c0-4dcb-b5cf-9a8eef352bfe
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: Población
+
+		annotation SummarizationSetBy = Automatic
+
+	column Provincia
+		dataType: string
+		lineageTag: 488584d2-99c0-4aed-8197-a001ecf84bae
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: Provincia
+
+		annotation SummarizationSetBy = Automatic
+
+	column País
+		dataType: string
+		lineageTag: 5ddffbf6-3622-4e27-ac23-02bdc4671985
+		dataCategory: CountryRegion
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código País'
+		dataType: string
+		isHidden
+		lineageTag: ea3568b2-d2b1-4766-8e46-4ce23ac7bbea
+		summarizeBy: none
+		sourceColumn: Código País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitud
+		dataType: double
+		lineageTag: b81ab846-4bf1-4fab-9f30-5ca4d2d495d8
+		dataCategory: Latitude
+		summarizeBy: sum
+		sourceColumn: Latitud
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitud
+		dataType: double
+		lineageTag: a8bfa851-7bb2-4dd8-b315-a6f2063f8d95
+		dataCategory: Longitude
+		summarizeBy: sum
+		sourceColumn: Longitud
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Jerarquía geográfica para análisis territorial.
+	hierarchy Ubicación
+		lineageTag: 72d61218-e396-45a1-9616-573f9b694cdf
+
+		level País
+			lineageTag: 6aaf0188-2cd2-4209-bcb5-77fe3850d760
+			column: País
+
+		level Provincia
+			lineageTag: a1f5bdae-3e04-40fc-8ddf-d8f2d694c031
+			column: Provincia
+
+		level Población
+			lineageTag: b8db2608-44a8-463e-ab93-ddcedfa02fc2
+			column: Población
+
+		level 'Código Postal'
+			lineageTag: ea47ce62-2e5f-4c7d-a4cb-5c97358f0a9f
+			column: 'Código Postal'
+
+	partition dDirección = m
+		mode: import
+		queryGroup: Dimensiones
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_Direccion_Table = Source{[Item="xerppasm_Direccion",Kind="Table"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(xerppasm_Direccion_Table, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"xerppasm_codigopais", type text}, {"xerppasm_direccionid", type text}, {"xerppasm_iddireccion", Int64.Type}, {"xerppasm_pais", type text}, {"xerppasm_poblacion", type text}, {"xerppasm_provincia", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"xerppasm_codigopais", "Código País"}, {"xerppasm_cp", "Código Postal"}, {"xerppasm_iddireccion", "IdDireccion"}, {"xerppasm_latitud", "Latitud"}, {"xerppasm_longitud", "Longitud"}, {"xerppasm_pais", "País"}, {"xerppasm_poblacion", "Población"}, {"xerppasm_provincia", "Provincia"}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"IdDireccion", "Código País", "Código Postal", "xerppasm_direccionid", "Latitud", "Longitud", "País", "Población", "Provincia"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Reordered Columns",".",",",Replacer.ReplaceText,{"Longitud"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",".",",",Replacer.ReplaceText,{"Latitud"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value1",{{"Latitud", type number}, {"Longitud", type number}, {"Código Postal", type text}}),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Changed Type1",{"IdDireccion", "Código Postal", "Población", "Provincia", "País", "Código País", "xerppasm_direccionid", "Latitud", "Longitud"}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Reordered Columns1",{"IdDireccion", "Código Postal", "Población", "Provincia", "País", "Código País", "Latitud", "Longitud"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

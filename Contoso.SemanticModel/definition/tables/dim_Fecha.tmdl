@@ -1,0 +1,123 @@
+/// Tabla calendario para inteligencia temporal sobre la venta por albarán.
+table dim_Fecha
+	lineageTag: 4db36846-34f8-479c-94bb-69dfd93433af
+	dataCategory: Time
+
+	column Fecha
+		isUnique
+		lineageTag: 9e746201-3343-467b-96f6-f5b8b699dbaf
+		sourceColumn: [Date]
+
+	column FechaKey
+		isHidden
+		lineageTag: 907004af-1660-416c-85b9-9b5254de76a6
+		isNameInferred
+		sourceColumn: [FechaKey]
+
+	column Año
+		lineageTag: f99b266f-1023-4b9f-9e42-71861ffc7a63
+		isNameInferred
+		sourceColumn: [Año]
+
+	column 'Trimestre N'
+		isHidden
+		lineageTag: a5f45e9e-6897-4f13-874d-77aff0a79c46
+		isNameInferred
+		sourceColumn: [Trimestre N]
+
+	column Trimestre
+		lineageTag: 02ff71f7-d2a7-425b-a440-a793f0bc9cdc
+		isNameInferred
+		sourceColumn: [Trimestre]
+		sortByColumn: 'Trimestre N'
+
+	column 'Mes N'
+		isHidden
+		lineageTag: fedeb946-3bff-44ce-b351-e7fa5692ec7c
+		isNameInferred
+		sourceColumn: [Mes N]
+
+	column Mes
+		lineageTag: 45439d59-d215-4a00-80a5-47074f0f1fbf
+		isNameInferred
+		sourceColumn: [Mes]
+		sortByColumn: 'Mes N'
+
+	column 'AñoMes Orden'
+		isHidden
+		lineageTag: 1d40c82b-6525-4709-8ef2-0f370b6b56e1
+		isNameInferred
+		sourceColumn: [AñoMes Orden]
+
+	column AñoMes
+		lineageTag: b2f3baab-1b9e-4628-9a6e-4d8912e0a408
+		isNameInferred
+		sourceColumn: [AñoMes]
+		sortByColumn: 'AñoMes Orden'
+
+	column 'AñoTrimestre Orden'
+		isHidden
+		lineageTag: 9e5ba953-642a-4e4c-b633-f8c4254f0974
+		isNameInferred
+		sourceColumn: [AñoTrimestre Orden]
+
+	column AñoTrimestre
+		lineageTag: 238dd460-6edd-4f08-84d4-627473ef0310
+		isNameInferred
+		sourceColumn: [AñoTrimestre]
+		sortByColumn: 'AñoTrimestre Orden'
+
+	column Día
+		lineageTag: de8dcf74-bae8-4025-9200-55a5f98b7980
+		isNameInferred
+		sourceColumn: [Día]
+
+	column 'Día Semana N'
+		isHidden
+		lineageTag: ea129d9b-a62d-4769-9ec7-e877e8c527ff
+		isNameInferred
+		sourceColumn: [Día Semana N]
+
+	column 'Día Semana'
+		lineageTag: e22a86a1-9cd5-42b8-85c1-032ac66f967d
+		isNameInferred
+		sourceColumn: [Día Semana]
+		sortByColumn: 'Día Semana N'
+
+	column Semana
+		lineageTag: a496302c-938a-41d5-b625-8b7809239965
+		isNameInferred
+		sourceColumn: [Semana]
+
+	column 'Fin de Semana'
+		lineageTag: 9ce1c37f-b887-48ac-ab25-0e5d0b24a16c
+		isNameInferred
+		sourceColumn: [Fin de Semana]
+
+	partition dim_Fecha = calculated
+		mode: import
+		source =
+				VAR MinFecha = MIN( fact_Ventas[Fecha] )
+				VAR MaxFecha = MAX( fact_Ventas[Fecha] )
+				VAR Inicio = DATE( YEAR( MinFecha ), 1, 1 )
+				VAR Fin = DATE( YEAR( MaxFecha ), 12, 31 )
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR( Inicio, Fin ),
+				    "FechaKey", YEAR( [Date] ) * 10000 + MONTH( [Date] ) * 100 + DAY( [Date] ),
+				    "Año", YEAR( [Date] ),
+				    "Trimestre N", QUARTER( [Date] ),
+				    "Trimestre", "T" & QUARTER( [Date] ),
+				    "Mes N", MONTH( [Date] ),
+				    "Mes", SWITCH( MONTH( [Date] ), 1, "Enero", 2, "Febrero", 3, "Marzo", 4, "Abril", 5, "Mayo", 6, "Junio", 7, "Julio", 8, "Agosto", 9, "Septiembre", 10, "Octubre", 11, "Noviembre", "Diciembre" ),
+				    "AñoMes Orden", YEAR( [Date] ) * 100 + MONTH( [Date] ),
+				    "AñoMes", FORMAT( [Date], "yyyy-MM" ),
+				    "AñoTrimestre Orden", YEAR( [Date] ) * 10 + QUARTER( [Date] ),
+				    "AñoTrimestre", FORMAT( YEAR( [Date] ), "0" ) & "-T" & QUARTER( [Date] ),
+				    "Día", DAY( [Date] ),
+				    "Día Semana N", WEEKDAY( [Date], 2 ),
+				    "Día Semana", SWITCH( WEEKDAY( [Date], 2 ), 1, "Lunes", 2, "Martes", 3, "Miércoles", 4, "Jueves", 5, "Viernes", 6, "Sábado", "Domingo" ),
+				    "Semana", WEEKNUM( [Date], 2 ),
+				    "Fin de Semana", WEEKDAY( [Date], 2 ) > 5
+				)
+

@@ -1,0 +1,122 @@
+/// Dimensión de productos con clasificación comercial y rol estratégico.
+table dim_Producto
+	lineageTag: 00390c4e-0594-458c-aa81-6cffd6d70344
+
+	column IdProducto
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0b4ff242-0dda-4d75-a6c6-23d401cd5462
+		summarizeBy: sum
+		sourceColumn: IdProducto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Producto
+		dataType: string
+		lineageTag: 14262739-b465-47dd-a87a-80ac252be5da
+		summarizeBy: none
+		sourceColumn: Producto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		isHidden
+		lineageTag: 48e5b888-885a-4c30-a470-b9447c84317c
+		summarizeBy: none
+		sourceColumn: Familia
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubFamilia
+		dataType: string
+		lineageTag: 5bc59c6e-c2de-4844-b428-1629d71cdd21
+		summarizeBy: none
+		sourceColumn: SubFamilia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Modelo
+		dataType: string
+		lineageTag: 4177c827-0ce0-4f28-a502-2e2ebc9f50a4
+		summarizeBy: none
+		sourceColumn: Modelo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color
+		dataType: string
+		lineageTag: 95af19f0-f909-4316-bd7f-d43ace5982b0
+		summarizeBy: none
+		sourceColumn: Color
+
+		annotation SummarizationSetBy = Automatic
+
+	column Foto
+		dataType: string
+		lineageTag: a7023daa-0fcb-4659-b0df-427fdbd222a7
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Foto
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Agrupación comercial estandarizada de las familias de producto.
+	column 'Familia Comercial' =
+			VAR FamiliaBase = UPPER( TRIM( COALESCE( 'dim_Producto'[Familia], "" ) ) )
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        CONTAINSSTRING( FamiliaBase, "BIKE" ) || CONTAINSSTRING( FamiliaBase, "BICICLETA" ), "Bicicletas",
+			        CONTAINSSTRING( FamiliaBase, "COMPONENT" ), "Componentes",
+			        CONTAINSSTRING( FamiliaBase, "ACCESS" ), "Accesorios",
+			        CONTAINSSTRING( FamiliaBase, "CLOTHING" ) || CONTAINSSTRING( FamiliaBase, "ROPA" ), "Ropa",
+			        FamiliaBase = "GENERAL", "General",
+			        FamiliaBase = "UNIDAD DE PAR", "Otros",
+			        FamiliaBase = "", "Otros",
+			        "Otros"
+			    )
+		dataType: string
+		lineageTag: 1e8c23e4-df68-471a-9846-c6f41a063a16
+
+	/// Rol estratégico del producto según la lógica comercial del negocio.
+	column 'Rol Estratégico' = IF( 'dim_Producto'[Familia Comercial] = "Bicicletas", "Producto tractor", "Venta complementaria" )
+		dataType: string
+		lineageTag: 5e444353-16cf-4d5d-958b-72781984aa96
+
+	/// Jerarquía comercial de producto.
+	hierarchy 'Jerarquía Producto'
+		lineageTag: 6956ef4d-275d-45ed-8674-d2af67d1cf14
+
+		level 'Familia Comercial'
+			lineageTag: 59494cb7-38fc-4452-972f-a87335932516
+			column: 'Familia Comercial'
+
+		level SubFamilia
+			lineageTag: 014e97e4-f0e0-4a59-bf65-a0bb15bad3eb
+			column: SubFamilia
+
+		level Producto
+			lineageTag: 6fc77d5a-6eed-4658-a197-325bb60230c4
+			column: Producto
+
+	partition dProductos = m
+		mode: import
+		queryGroup: Dimensiones
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\dmcon\Downloads\Laboratorio-de-Datos.xlsx"), null, true),
+				    xerppasm_Productos_Table = Source{[Item="xerppasm_Productos",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(xerppasm_Productos_Table,{{"xerppasm_color", type text}, {"xerppasm_costeestandar", type number}, {"xerppasm_costeestandar_base", type number}, {"xerppasm_familia", type text}, {"xerppasm_foto", type text}, {"xerppasm_idempresa", Int64.Type}, {"xerppasm_idfamilia", Int64.Type}, {"xerppasm_idmodelo", Int64.Type}, {"xerppasm_idproducto", Int64.Type}, {"xerppasm_idproveedor", type any}, {"xerppasm_idsubfamilia", Int64.Type}, {"xerppasm_modelo", type text}, {"xerppasm_nombreproducto", type text}, {"xerppasm_nombreproveedor", type any}, {"xerppasm_peso", type number}, {"xerppasm_productosid", type text}, {"xerppasm_pulista", type number}, {"xerppasm_pulista_base", type number}, {"xerppasm_subfamilia", type text}, {"xerppasm_tamano", Int64.Type}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"xerppasm_color", "xerppasm_familia", "xerppasm_foto", "xerppasm_idproducto", "xerppasm_modelo", "xerppasm_nombreproducto", "xerppasm_nombreproveedor", "xerppasm_subfamilia"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"xerppasm_color", "Color"}, {"xerppasm_familia", "Familia"}, {"xerppasm_foto", "Foto"}, {"xerppasm_idproducto", "IdProducto"}, {"xerppasm_modelo", "Modelo"}, {"xerppasm_nombreproducto", "Producto"}, {"xerppasm_subfamilia", "SubFamilia"}}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns",{"Color", "Familia", "Foto", "IdProducto", "Modelo", "Producto", "SubFamilia"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Other Columns1",{"IdProducto", "Producto", "Familia", "SubFamilia", "Modelo", "Color", "Foto"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

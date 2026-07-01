@@ -1,0 +1,30 @@
+relationship dim_Cliente_fact_Ventas_IdCliente
+	fromColumn: fact_Ventas.IdCliente
+	toColumn: dim_Cliente.IdCliente
+
+relationship dim_Vendedor_fact_Ventas_IdVendedor
+	fromColumn: fact_Ventas.IdVendedor
+	toColumn: dim_Vendedor.IdVendedor
+
+relationship dim_Producto_fact_Ventas_IdProducto
+	fromColumn: fact_Ventas.IdProducto
+	toColumn: dim_Producto.IdProducto
+
+relationship dim_Geografia_fact_Ventas_IdDireccion
+	fromColumn: fact_Ventas.IdDireccion
+	toColumn: dim_Geografia.IdDireccion
+
+relationship dim_Albaran_fact_Ventas_IdAlbaran
+	fromColumn: fact_Ventas.IdAlbaran
+	toColumn: dim_Albaran.IdAlbaran
+
+relationship dim_Fecha_fact_Ventas_Fecha
+	fromColumn: fact_Ventas.Fecha
+	toColumn: dim_Fecha.Fecha
+
+relationship param_AtributoAnalisis_Metadata_param_AtributoAnalisis
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: pfAtributoAnalisis_Metadata.Atributo
+	toColumn: pfAtributoAnalisis.pfAtributoAnalisis
+

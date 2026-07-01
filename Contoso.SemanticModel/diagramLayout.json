@@ -1,0 +1,188 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 107,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 326.598196389883,
+            "y": 666.22431686155585
+          },
+          "nodeIndex": "dim_Albaran",
+          "nodeLineageTag": "0f9227a9-2de7-4c3f-b9a0-ef50146a4926",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1056.820133876884,
+            "y": 110.11525627339353
+          },
+          "nodeIndex": "dim_Cliente",
+          "nodeLineageTag": "8e592f28-27c9-4a78-9b88-90bc099d6fbc",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 107,
+            "y": 228.02691939495662
+          },
+          "nodeIndex": "dim_Geografia",
+          "nodeLineageTag": "12ec07ea-d048-4abd-a30b-e052f7bdd6cd",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 645.86135815746388,
+            "y": 675.51716752993
+          },
+          "nodeIndex": "dim_Producto",
+          "nodeLineageTag": "00390c4e-0594-458c-aa81-6cffd6d70344",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 575.71504759201173,
+            "y": 0
+          },
+          "nodeIndex": "dim_Vendedor",
+          "nodeLineageTag": "81215117-b127-490a-a69d-ec6c3d37ec90",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 617.22225228536513,
+            "y": 200.07108367918079
+          },
+          "nodeIndex": "fact_Ventas",
+          "nodeLineageTag": "0c0703ff-fce1-45a4-b36e-24373418e044",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1529.820133876884,
+            "y": 0
+          },
+          "nodeIndex": "_Medidas",
+          "nodeLineageTag": "5879887f-6978-41c8-9e3f-3d4e95aa7f24",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 991.820133876884,
+            "y": 477.11215843077792
+          },
+          "nodeIndex": "dim_Fecha",
+          "nodeLineageTag": "4db36846-34f8-479c-94bb-69dfd93433af",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 1539.820133876884,
+            "y": 231.758583764965
+          },
+          "nodeIndex": "param_Formato",
+          "nodeLineageTag": "4202986d-b004-4e79-8810-4396aa7d4dec",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1541.820133876884,
+            "y": 441.758583764965
+          },
+          "nodeIndex": "gcKPI",
+          "nodeLineageTag": "f26572de-91fa-4953-89e1-348610a3593c",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2172.820133876884,
+            "y": 385.758583764965
+          },
+          "nodeIndex": "pfAtributoAnalisis",
+          "nodeLineageTag": "bedf7fe6-c8a6-466d-a44e-1985641f519f",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2349.820133876884,
+            "y": 337.758583764965
+          },
+          "nodeIndex": "pfAtributoAnalisis_Metadata",
+          "nodeLineageTag": "e57ef77d-0cda-48e1-80f8-7b7a3303b33f",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {},
+          "nodeIndex": "gcTiempo",
+          "nodeLineageTag": "7786da51-d7b5-4b39-8a9a-5fcf7ea6e7c4",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

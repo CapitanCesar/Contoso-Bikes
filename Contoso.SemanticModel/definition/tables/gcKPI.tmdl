@@ -1,0 +1,96 @@
+table gcKPI
+	lineageTag: f26572de-91fa-4953-89e1-348610a3593c
+
+	/// Selector de KPI principal del modelo comercial.
+	calculationGroup
+		precedence: 10
+
+		/// Comportamiento por defecto cuando no hay una única selección.
+		multipleOrEmptySelectionExpression = SELECTEDMEASURE()
+
+		/// Devuelve la medida base cuando no hay selección explícita.
+		noSelectionExpression = SELECTEDMEASURE()
+
+		/// Selecciona la medida Ventas Netas.
+		calculationItem 'Ventas Netas' = [Ventas Netas]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "€#,##0", 1, "€#,##0.0,K", 2, "€#,##0.0,,M", "€#,##0" )
+
+		/// Selecciona la medida Cantidad Vendida.
+		calculationItem 'Cantidad Vendida' = [Cantidad Vendida]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "#,##0", 1, "#,##0.0,K", 2, "#,##0.0,,M", "#,##0" )
+
+		/// Selecciona la medida Coste Total.
+		calculationItem 'Coste Total' = [Coste Total]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "€#,##0", 1, "€#,##0.0,K", 2, "€#,##0.0,,M", "€#,##0" )
+
+		/// Selecciona la medida Margen Bruto.
+		calculationItem 'Margen Bruto' = [Margen Bruto]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "€#,##0", 1, "€#,##0.0,K", 2, "€#,##0.0,,M", "€#,##0" )
+
+		/// Selecciona la medida Margen Bruto %.
+		calculationItem 'Margen Bruto %' = [Margen Bruto %]
+
+			formatStringDefinition = "0.0%;-0.0%;0.0%"
+
+		/// Selecciona el número de albaranes.
+		calculationItem 'Nº Albaranes' = [Nº Albaranes]
+
+			formatStringDefinition = "#,##0"
+
+		/// Selecciona el número de clientes.
+		calculationItem 'Nº Clientes' = [Nº Clientes]
+
+			formatStringDefinition = "#,##0"
+
+		/// Selecciona la medida Ticket Medio.
+		calculationItem 'Ticket Medio' = [Ticket Medio]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "€#,##0", 1, "€#,##0.0,K", 2, "€#,##0.0,,M", "€#,##0" )
+
+		/// Selecciona la medida Venta Media por Cliente.
+		calculationItem 'Venta Media por Cliente' = [Venta Media por Cliente]
+
+			formatStringDefinition =
+					VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+					RETURN
+					    SWITCH( Seleccion, 0, "€#,##0", 1, "€#,##0.0,K", 2, "€#,##0.0,,M", "€#,##0" )
+
+		/// Selecciona la medida Descuento %.
+		calculationItem 'Descuento %' = [Descuento %]
+
+			formatStringDefinition = "0.0%;-0.0%;0.0%"
+
+	column 'Nombre KPI'
+		dataType: string
+		lineageTag: 98632175-7f8b-4759-a575-0c5fcba49288
+		sourceColumn: Name
+		sortByColumn: Orden
+
+	/// Orden nativo del grupo de cálculo gcKPI.
+	column Orden
+		dataType: int64
+		isHidden
+		lineageTag: c00336e9-9583-4d2e-890d-eff2957f8df7
+		sourceColumn: Ordinal
+
+	partition Partition_calc_Medida = calculationGroup
+
