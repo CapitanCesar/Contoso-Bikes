@@ -13,7 +13,7 @@ queryGroup Dimensiones
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["fVentas","dClientes","dVendedores","dProductos","dDirección","dVentas"]
+annotation PBI_QueryOrder = ["fact_Ventas","dim_Cliente","dim_Vendedor","dim_Producto","dim_Geografia","dim_Albaran"]
 
 annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
 
