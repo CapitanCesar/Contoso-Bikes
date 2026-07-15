@@ -512,6 +512,102 @@ table _Medidas
 		displayFolder: Time Intelligence\Acumulado Anterior
 		lineageTag: 697bf1f9-72d0-47a3-bc9b-445ad7544fea
 
+	/// Número de vendedores con movimiento comercial en el contexto filtrado.
+	measure 'Nº Vendedores' = DISTINCTCOUNT( fact_Ventas[IdVendedor] )
+		formatString: #,##0
+		displayFolder: Base
+		lineageTag: b321d277-2d8f-4afe-93ea-ff1dcb7e3f5f
+
+	/// Venta neta media por vendedor en el contexto seleccionado.
+	measure 'Venta Media por Vendedor' =
+			VAR Ventas = [Ventas Netas]
+			VAR Vendedores = [Nº Vendedores]
+			RETURN
+			    DIVIDE( Ventas, Vendedores )
+		displayFolder: Ratios y KPIs
+		lineageTag: 67a0ff20-6e58-47ee-b75f-8f44d4dda61f
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Venta neta media por producto en el contexto seleccionado.
+	measure 'Venta Media por Producto' =
+			VAR Ventas = [Ventas Netas]
+			VAR Productos = [Nº Productos]
+			RETURN
+			    DIVIDE( Ventas, Productos )
+		displayFolder: Ratios y KPIs
+		lineageTag: 7d5cc8d2-9a80-4f07-a6b8-26a12768022d
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Unidades vendidas por albarán medio.
+	measure 'Unidades por Albarán' =
+			VAR Cantidad = [Cantidad Vendida]
+			VAR Albaranes = [Nº Albaranes]
+			RETURN
+			    DIVIDE( Cantidad, Albaranes )
+		formatString: #,##0.0
+		displayFolder: Ratios y KPIs
+		lineageTag: 35377ccd-44e0-4ea0-8b8f-ba44e8897d834
+
+	/// Coste total como porcentaje de la venta neta.
+	measure 'Coste % sobre Ventas' =
+			VAR Coste = [Coste Total]
+			VAR Ventas = [Ventas Netas]
+			RETURN
+			    DIVIDE( Coste, Ventas )
+		formatString: 0.0%
+		displayFolder: Ratios y KPIs
+		lineageTag: 7d50f8ff-78b8-4c22-b103-2fdf4ebdb839
+
+	/// Variación absoluta de ventas netas frente al mes anterior.
+	measure 'Ventas Netas Variación vs Mes Anterior' =
+			VAR Actual = [Ventas Netas]
+			VAR Anterior = [Ventas Netas Mes Anterior]
+			RETURN
+			    Actual - Anterior
+		displayFolder: Time Intelligence\Variación
+		lineageTag: d5ed54a1-74ad-4d0b-94e0-b6d0b144fb74
+
+		formatStringDefinition =
+				VAR Seleccion = SELECTEDVALUE( param_Formato[FormatoOrder], 0 )
+				RETURN
+				    SWITCH(
+				        Seleccion,
+				        0, "€#,##0",
+				        1, "€#,##0.0,K",
+				        2, "€#,##0.0,,M",
+				        "€#,##0"
+				    )
+
+	/// Variación porcentual de ventas netas frente al mes anterior.
+	measure 'Ventas Netas Variación % vs Mes Anterior' =
+			VAR Actual = [Ventas Netas]
+			VAR Anterior = [Ventas Netas Mes Anterior]
+			RETURN
+			    DIVIDE( Actual - Anterior, Anterior )
+		formatString: 0.0%
+		displayFolder: Time Intelligence\Variación
+		lineageTag: 5be799a2-2c47-454d-9fd7-4cdeec70e2f5
+
 	column Placeholder
 		isHidden
 		lineageTag: 617b3256-0805-4a9f-a7b3-31273bc4185b
